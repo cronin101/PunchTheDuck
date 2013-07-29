@@ -5,6 +5,7 @@ describe Proc do
   it "Should permit function composition via Currying by default" do
     function = ->(a, b, c, d, e, f, g){ a + b + c + d + e + f + g }
     function.(1).(2).(3).(4).(5).(6).(7)
+      .should == (1..7).inject(:+)
 
     function = ->(a, b, c, d, e, f, g) { [] << a << b << c << d << e << f << g }
     function
@@ -15,6 +16,7 @@ describe Proc do
       .(5)
       .(6)
       .(7)
+      .should == (1..7).to_a
   end
 
   it "Should not break tradional proc-calling" do
@@ -47,7 +49,8 @@ describe Proc do
   end
 
   it "Should not break traditional mapping" do
-    (1..5).map { |num| ('x' + num.to_s).to_sym }.should == [:x1, :x2, :x3, :x4, :x5]
+    (1..5).map { |num| ('x' + num.to_s).to_sym }
+      .should == [:x1, :x2, :x3, :x4, :x5]
   end
 
 end
