@@ -8,26 +8,26 @@ describe Proc do
 
   it "Automatically curries if too few arguments are supplied" do
     two_argument_proc = ->(arg_one, arg_two){:result}
-    two_argument_proc.call(:one_argument).should be_an_instance_of(Proc)
+    two_argument_proc.(:one_argument).should be_an_instance_of(Proc)
 
-    two_argument_proc.call(:one_argument).call(:another_argument).should == :result
+    two_argument_proc.(:one_argument).(:another_argument).should == :result
   end
 
   it "Allows partial mapping via auto-currying" do
     two_argument_proc = ->(one, two){:result}
     (1..10)
       .map { |num| two_argument_proc.(:two) }
-      .map { |func| func.(:two) }
+      .map { |f| f.(:two) }
       .should == ([:result] * 10)
 
     (1..10)
       .map(&two_argument_proc)
-      .map { |func| func.(:two) }
+      .map { |f| f.(:two) }
       .should == ([:result] * 10)
 
     (1..10)
       .map { |num, other_param| num + other_param }
-      .map { |func| func.call(1) }
+      .map { |f| f.(1) }
       .should == (2..11).to_a
   end
 
@@ -39,10 +39,10 @@ end
 
 describe Object do
   it "Should be possible to set instance methods of a class via prototype" do
-    String::prototype(:shoutcase).set ->() { self.upcase + '!' }
+    String::prototype(:shoutcase).set ->{ self.upcase + '!' }
     "hello".shoutcase.should == 'HELLO!'
 
-    String::prototype(:lotsa_shouts).set ->(times) { ([self.shoutcase, ' '] * times).join[0..-2] }
+    String::prototype(:lotsa_shouts).set ->(times){ ([self.shoutcase, ' '] * times).join[0..-2] }
     "hey".lotsa_shouts(3).should == "HEY! HEY! HEY!"
   end
 
