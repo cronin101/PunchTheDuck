@@ -32,7 +32,7 @@ class Proc
     begin
       __noncurry_call__(*args)
     rescue ArgumentError
-      curry[args]
+      curry.(*args)
     end
   end
 

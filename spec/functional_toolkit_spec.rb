@@ -2,6 +2,21 @@ require './functional_toolkit'
 
 describe Proc do
 
+  it "Should permit function composition via Currying by default" do
+    function = ->(a, b, c, d, e, f, g){ a + b + c + d + e + f + g }
+    function.(1).(2).(3).(4).(5).(6).(7)
+
+    function = ->(a, b, c, d, e, f, g) { [] << a << b << c << d << e << f << g }
+    function
+      .(1)
+      .(2)
+      .(3)
+      .(4)
+      .(5)
+      .(6)
+      .(7)
+  end
+
   it "Should not break tradional proc-calling" do
     ->(string) { string.upcase }.('bang!').should == 'BANG!'
   end
