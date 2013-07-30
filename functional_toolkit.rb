@@ -86,11 +86,11 @@ class Maybe < BasicObject
   end
 
   def nil?
-    self.!.nil?
+    self.().nil?
   end
 
   def empty?
-    result = self.!
+    result = self.()
     if result.respond_to? :empty?
       result.empty?
     else
@@ -102,7 +102,7 @@ class Maybe < BasicObject
     !empty?
   end
 
-  def !
+  def call
     begin
       value = @value.dup
     rescue ::TypeError

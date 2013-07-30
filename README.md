@@ -31,6 +31,6 @@ require './functional_toolkit'
   (1..10).maybe.select(&:even?).select(&:odd?).first.to_derp.something?
   #=> False
 
-  (1..10).maybe.select(&:even?).first.!
+  (1..10).maybe.select(&:even?).first.()
   #=> 2
 ```

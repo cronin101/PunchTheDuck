@@ -74,19 +74,19 @@ end
 describe Maybe do
 
   it "Should be easy to wrap any object in a maybe" do
-    1.maybe.!.should == 1
-    :call_me.maybe.!.should == :call_me
-    [1,2,3].maybe.!.should == [1,2,3]
+    1.maybe.().should == 1
+    :call_me.maybe.().should == :call_me
+    [1,2,3].maybe.().should == [1,2,3]
   end
 
   it "Should allow methods to be chained prior to evaluation" do
     chain = [1,2,3].maybe.select(&:even?).select(&:odd?).first
     chain.nil?.should == true
 
-    puts chain.!
-    chain + 10.!.should == nil
+    puts chain.()
+    (chain + 10).().should == nil
 
-    [1,2,3].maybe.select(&:odd?).first.to_s.!.should == '1'
+    [1,2,3].maybe.select(&:odd?).first.to_s.().should == '1'
   end
 
 end
