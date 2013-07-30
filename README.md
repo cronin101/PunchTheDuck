@@ -1,7 +1,7 @@
 ```ruby
 require './functional_toolkit'
 
-# Partially-applied-function composition
+# Partially-applied-function composition.
   add = ->(x, y){x + y}
 
   add_one = add.(1)
@@ -19,18 +19,40 @@ require './functional_toolkit'
     .map { |f| f.(1) }
     .map { |g| g.(2) }
 
-# Function prototype definition
-  String::prototype(:to_derp).set ->{ 'derp' }
+# Function prototype definition.
+  String::prototype(:to_derp).set ->(this){ 'derp' }
 
   'herp'.to_derp
   #=> "derp"
 
 # Maybe Monad
-  Fixnum::prototype(:to_derp).set ->{ '03rp'.to_i }
+  Fixnum::prototype(:to_derp).set ->(this){ '03rp'.to_i }
 
   (1..10).maybe.select(&:even?).select(&:odd?).first.to_derp.something?
   #=> False
 
   (1..10).maybe.select(&:even?).first.()
   #=> 2
+
+# Putting it all together to create a horrible mess.
+  Fixnum::prototype(:to_xvar).set ->(this){ 'x' + this.to_s }
+
+  (1..10)
+    .maybe
+    .select(&:even?)
+    .select{ |num| num > 10 }
+    .map(&add)
+    .map { |func| func.(1) }
+    .map(&:to_xvar).()
+  #=> []
+
+  (1..10)
+    .maybe
+    .select(&:even?)
+    .select{ |num| num < 10 }
+    .map(&add)
+    .map { |func| func.(1) }
+    .map(&:to_xvar).()
+  #=> ["x3", "x5", "x7", "x9"]
+
 ```

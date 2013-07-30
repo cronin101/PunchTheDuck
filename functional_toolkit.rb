@@ -12,7 +12,7 @@ class Object
     # Attach a lambda to an object as a method.
     def set(function)
       raise ArgumentError unless function.respond_to? :call
-      klass.send :define_method, method_name, &function
+      klass.send :define_method, method_name, ->(*args){ function.(->{ self }.()) }
     end
 
   end
