@@ -47,10 +47,24 @@ end
 # Duck-punch Enumerable to not complain when partially mapping via .to_proc shortcut
 module Enumerable
   alias_method :__noncurry_map__, :map
-  private :__noncurry_map__
 
   def map(&proc)
     __noncurry_map__(&proc.curry)
+  end
+
+  # Perform map using num_groups parallel threads
+  NUM_GROUPS = 10
+  def pmap(greedy: false, &proc)
+    if greedy
+      map { |element| Thread.new { Thread.current[:out] = proc.(element) } }.map(&:join).map { |t| t[:out] }
+    else
+      parts = each_slice((self.size/Float(NUM_GROUPS)).ceil)
+      parts.__noncurry_map__ { |part|
+        Thread.new {
+          Thread.current[:out] = part.__noncurry_map__(&proc)
+        }
+      }.__noncurry_map__(&:join).flat_map { |t| t[:out] }
+    end
   end
 
 end
