@@ -69,8 +69,6 @@ class Maybe < BasicObject
     "< Maybe #{@value.class}, Chain: #{@methods.inspect} >"
   end
 
-  alias_method :puts, :inspect
-
   def maybe
     ::Kernel.raise ::ArgumentError, "You are already Maybe!"
   end
