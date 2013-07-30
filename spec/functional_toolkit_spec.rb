@@ -56,6 +56,7 @@ describe Proc do
 end
 
 describe Object do
+
   it "Should be possible to set instance methods of a class via prototype" do
     String::prototype(:shoutcase).set ->{ self.upcase + '!' }
     "hello".shoutcase.should == 'HELLO!'
@@ -66,6 +67,26 @@ describe Object do
 
   it "Should be possible to call instance methods from a class prototype" do
     String::prototype(:to_sym).('test').should == :test
+  end
+
+end
+
+describe Maybe do
+
+  it "Should be easy to wrap any object in a maybe" do
+    1.maybe.!.should == 1
+    :call_me.maybe.!.should == :call_me
+    [1,2,3].maybe.!.should == [1,2,3]
+  end
+
+  it "Should allow methods to be chained prior to evaluation" do
+    chain = [1,2,3].maybe.select(&:even?).select(&:odd?).first
+    chain.nil?.should == true
+
+    puts chain.!
+    chain + 10.!.should == nil
+
+    [1,2,3].maybe.select(&:odd?).first.to_s.!.should == '1'
   end
 
 end

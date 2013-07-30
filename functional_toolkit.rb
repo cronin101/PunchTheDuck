@@ -1,6 +1,5 @@
 # Ruby Functional Toolkit. Unsensible hacks to make the language ridiculous.
 
-# Attach a lambda to an object as a method.
 class Object
 
   class FunctionPrototype < Struct.new(:klass, :method_name)
@@ -10,12 +9,19 @@ class Object
       instance.send method_name, *args
     end
 
+    # Attach a lambda to an object as a method.
     def set(function)
       raise ArgumentError unless function.respond_to? :call
       klass.send :define_method, method_name, &function
     end
 
   end
+
+  # Call me maybe.
+  def maybe
+    Maybe.new(self)
+  end
+
 
   def prototype(name)
     FunctionPrototype.new(self, name)
@@ -45,6 +51,74 @@ module Enumerable
 
   def map(&proc)
     __noncurry_map__(&proc.curry)
+  end
+
+end
+
+# Maybe Monad.
+class Maybe < BasicObject
+
+  @@chain_size = 0
+
+  def initialize(value)
+    @value = value
+    @methods = {}
+  end
+
+  def inspect
+    "< Maybe #{@value.class}, Chain: #{@methods.inspect} >"
+  end
+
+  alias_method :puts, :inspect
+
+  def maybe
+    ::Kernel.raise ::ArgumentError, "You are already Maybe!"
+  end
+
+  def method_missing(method, *args, &block)
+    @@chain_size += 1
+    @methods[@@chain_size] = {
+      name: method,
+      args: args,
+      block: block,
+    }
+    self
+  end
+
+  def nil?
+    self.!.nil?
+  end
+
+  def empty?
+    result = self.!
+    if result.respond_to? :empty?
+      result.empty?
+    else
+      result.nil? || (result == []) || (result == {}) || (result == '')
+    end
+  end
+
+  def something?
+    !empty?
+  end
+
+  def !
+    begin
+      value = @value.dup
+    rescue ::TypeError
+      value = @value
+    end
+    @methods.values.inject(value) do |result, method|
+      begin
+        result.send(method[:name], *method[:args], &method[:block])
+      rescue ::NoMethodError => ex
+        if result.nil?
+          return nil
+        else
+          ::Kernel.raise ::NoMethodError, ex.message
+        end
+      end
+    end
   end
 
 end
