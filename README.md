@@ -1,3 +1,6 @@
+# PunchTheDuck
+### Instead of making languages better, why don't we make them worse?
+##### In which, I gradually give Ruby *every* feature. Ever.
 ```ruby
 require './functional_toolkit'
 
