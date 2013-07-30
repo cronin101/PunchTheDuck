@@ -29,7 +29,7 @@ class Object
 
 end
 
-# Duck-punch Proc to auto-curry when too few arguments are supplied
+# Duck-punch Proc to auto-curry when too-few arguments are supplied
 class Proc
   alias_method :__noncurry_call__, :call
   private :__noncurry_call__
