@@ -52,8 +52,15 @@ module Enumerable
     __noncurry_map__(&proc.curry)
   end
 
-  # Perform map using num_groups parallel threads
-  NUM_GROUPS = 10
+  # Perform map and each using num_groups parallel threads
+  NUM_GROUPS = 16
+  def peach(&proc)
+    parts = each_slice((self.size/Float(NUM_GROUPS)).ceil)
+    parts.__noncurry_map__ { |part|
+      Thread.new { part.each(&proc) }
+    }.__noncurry_map__(&:join)
+  end
+
   def pmap(greedy: false, &proc)
     if greedy
       map { |element| Thread.new { Thread.current[:out] = proc.(element) } }.map(&:join).map { |t| t[:out] }
