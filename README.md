@@ -5,9 +5,14 @@
 ```ruby
 require './functional_toolkit'
 
-# Mapping with parallelism (for simple maps)
-  Benchmark.realtime { (1..10).pmap { ( sleep 2 ) && :done } }
-  # => 2.00277
+# Mapping with parallelism (for simple block maps)
+  Benchmark.realtime { (1..100).map { `curl http://www.google.co.uk` } }
+  #=> 7.386405
+  
+  Benchmark.realtime { (1..100).pmap { `curl http://www.google.co.uk` } }
+  #=> 0.60273
+  
+  
 
 # Partially-applied-function composition.
   add = ->(x, y){x + y}
