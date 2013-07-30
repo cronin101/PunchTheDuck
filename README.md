@@ -1,3 +1,4 @@
+![](http://tetgames.com/sites/default/files/S/super-duck-punch-screenshot.png)
 # PunchTheDuck
 #### Instead of making languages better, why don't we make them worse?
 ##### In this tale, I slowly give Ruby *every* feature. Ever.
