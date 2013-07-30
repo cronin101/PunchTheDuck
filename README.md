@@ -5,6 +5,13 @@
 ```ruby
 require './functional_toolkit'
 
+# Mapping with parallelism (for simple block maps)
+  Benchmark.realtime { (1..100).map { `curl http://www.google.co.uk` } }
+  #=> 7.386405
+  
+  Benchmark.realtime { (1..100).pmap { `curl http://www.google.co.uk` } }
+  #=> 0.60273
+
 # Partially-applied-function composition.
   add = ->(x, y){x + y}
 
@@ -56,7 +63,7 @@ require './functional_toolkit'
     .select{ |num| num > 10 }
     .map(&add)
     .map { |func| func.(1) }
-    .map(&:to_xvar).()
+    .pmap(&:to_xvar).()
   #=> []
 
   (1..10)
@@ -65,7 +72,7 @@ require './functional_toolkit'
     .select{ |num| num < 10 }
     .map(&add)
     .map { |func| func.(1) }
-    .map(&:to_xvar).()
+    .pmap(&:to_xvar).()
   #=> ["x3", "x5", "x7", "x9"]
 
 ```
