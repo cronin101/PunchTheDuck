@@ -5,6 +5,10 @@
 ```ruby
 require './functional_toolkit'
 
+# Mapping with parallelism (for simple maps)
+  Benchmark.realtime { (1..10).pmap { ( sleep 2 ) && :done } }
+  # => 2.00277
+
 # Partially-applied-function composition.
   add = ->(x, y){x + y}
 
@@ -57,7 +61,7 @@ require './functional_toolkit'
     .select{ |num| num > 10 }
     .map(&add)
     .map { |func| func.(1) }
-    .map(&:to_xvar).()
+    .pmap(&:to_xvar).()
   #=> []
 
   (1..10)
@@ -66,7 +70,7 @@ require './functional_toolkit'
     .select{ |num| num < 10 }
     .map(&add)
     .map { |func| func.(1) }
-    .map(&:to_xvar).()
+    .pmap(&:to_xvar).()
   #=> ["x3", "x5", "x7", "x9"]
 
 ```
