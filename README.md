@@ -11,8 +11,6 @@ require './functional_toolkit'
   
   Benchmark.realtime { (1..100).pmap { `curl http://www.google.co.uk` } }
   #=> 0.60273
-  
-  
 
 # Partially-applied-function composition.
   add = ->(x, y){x + y}
