@@ -24,12 +24,13 @@ require './functional_toolkit'
 
 # Function prototype definition.
   String::prototype(:to_derp).set ->(this){ 'derp' }
+  Fixnum::prototype(:to_derp).set ->(this){ '03rp'.to_i }
+  Fixnum::prototype(:to_xvar).set ->(this){ 'x' + this.to_s }
 
   'herp'.to_derp
   #=> "derp"
 
 # Maybe Monad
-  Fixnum::prototype(:to_derp).set ->(this){ '03rp'.to_i }
 
   (1..10).maybe.select(&:even?).select(&:odd?).first.to_derp.something?
   #=> False
@@ -38,7 +39,6 @@ require './functional_toolkit'
   #=> 2
 
 # Putting it all together to create a horrible mess.
-  Fixnum::prototype(:to_xvar).set ->(this){ 'x' + this.to_s }
 
   (1..10)
     .maybe
