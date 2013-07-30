@@ -24,15 +24,14 @@ require './functional_toolkit'
     .map { |g| g.(2) }
 
 # Function prototype definition.
-  String::prototype(:to_derp).set ->(this){ 'derp' }
-  Fixnum::prototype(:to_derp).set ->(this){ '03rp'.to_i }
-  Fixnum::prototype(:to_xvar).set ->(this){ 'x' + this.to_s }
+  String::prototype(:to_derp).set ->{ 'derp' }
+  Fixnum::prototype(:to_derp).set ->{ '03rp'.to_i }
+  Fixnum::prototype(:to_xvar).set ->{ 'x' + this.to_s }
 
   'herp'.to_derp
   #=> "derp"
 
 # Maybe Monad
-
   (1..10)
     .maybe
     .select(&:even?)

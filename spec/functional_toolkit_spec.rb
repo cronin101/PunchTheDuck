@@ -58,11 +58,11 @@ end
 describe Object do
 
   it "Should be possible to set instance methods of a class via prototype" do
-    String::prototype(:shoutcase).set ->(this){ this.upcase + '!' }
+    String::prototype(:shoutcase).set ->{ upcase + '!' }
     "hello".shoutcase.should == 'HELLO!'
 
-    String::prototype(:lotsa_shouts).set ->(this, times){ ([this.shoutcase, ' '] * times).join[0..-2] }
-    "hey".lotsa_shouts.(3).should == "HEY! HEY! HEY!"
+    String::prototype(:lotsa_shouts).set ->(times){ ([shoutcase, ' '] * times).join[0..-2] }
+    "hey".lotsa_shouts(3).should == "HEY! HEY! HEY!"
   end
 
   it "Should be possible to call instance methods from a class prototype" do
